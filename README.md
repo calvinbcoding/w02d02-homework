@@ -120,7 +120,7 @@ For each part, think about:
 #### The game should be able to:
 
 1. keep a library of all the Pokemon cards that can be played (see the array in the "The Cards" section)
-2. know what cards have been played
+2. know what cards have been played - what cards
 3. know how many cards are left to be played/dealt overall
 4. track points for both the player and the computer
     Note: Points are determined by the following: If the player's card beats the computer's card, the player gets one point (and vice versa). If there is a tie, no one gets a point.
