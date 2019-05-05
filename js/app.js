@@ -1,6 +1,13 @@
 // pakemon Gamepad
 // start the game ()
 // deal the player random 3 cards
+
+
+
+
+
+
+
 const cardChoices = [
     {
       name: "Bulbasaur",
@@ -58,99 +65,93 @@ const cardChoices = [
       damage: 40
     }
   ]
-  const scoreBoard = [{
-    user: 'Computer',
-    points: 0
-  }, {
-    user: 'Player',
-    points: 0
-  }]
   
+  
+class Player {
+  constructor(name){
+    this.name = name;
+    this.points =0;
+    this.hand = [];
+    this.handLength = 3;
+    this.roundsWon = 0;
+    
+  }
+  addCardsToHand(){
+    const randCard = game.deck.splice(Math.floor(Math.random() * game.deck.length),1)[0];
+    this.hand.push(randCard);
+    console.log(randCard);
 
-  //if the deck contains cards (6 or more); then start round
-  //if (deckCards.length >= 6)
-const beginGame = () => {
-  for(i = 0; i < 3; i++){ 
-    if(cardChoices.length >= 6){
-    startRound()
-  }else (alert('Game Over'))
+  }
 }
-}
-// deal the computer 3 random cards
-// deal the computer 3 random cards
-//push those cards into an array of objects 
-//with name and damage as values
-
-
-
-// remove those 3 cards from the array
-// player and computer each play a card
-//compare cards, determine winnner,  and award point 
-// player 
 //
-const startRound = () => {
-const compDeck = []
-const eggDeck = []
-const compRandCollection = () => {
-  for(i = 0; i < 3; i++){
-   const randCard = Math.floor(Math.random() * cardChoices.length);
-    compDeck.push(cardChoices[randCard]);
-    cardChoices.splice(randCard, 1);
-  }     
-  console.log(compDeck);
+const game = {
+    deck: cardChoices,
+    cardsPlayed: [],
+    eggbert: new Player('eggbert'),
+    computer: new Player('computer'),
+    roundsPlayed: 0,
+    cardsInHand: 3,
+
+    
+    drawCards: function(eggbert, computer, sizeOfHand) {
+      for(let i = 0 ; i < sizeOfHand; i ++){
+        eggbert.addCardsToHand();
+        computer.addCardsToHand();
+      }
+    },
+
+    showScoreBoard: function(eggbert, computer){
+      console.log("Score:", `${eggbert.name}`,":",`${eggbert.points}`, `${computer.name}`,":",`${computer.points}`);
+    },
+
+    roundBattle: function(eggbert, computer){
+      if(eggbert.hand[0].damage > computer.hand[0].damage){
+        eggbert.points++;
+        console.log('Eggbert wins the battle!')
+      } else if (computer.hand[0].damage > eggbert.hand[0].damage){
+       computer.points++;
+        console.log('Computer wins the battle!')
+      } else(console.log('Tie battle!'));
+      this.showScoreBoard(eggbert, computer);
+      this.cardsPlayed.push(eggbert.hand.splice(0,1)[0]);
+      this.cardsPlayed.push(computer.hand.splice(0,1)[0]);
+
+    },
+
+    whoWon: function(eggbert, computer){
+      if(eggbert.points > computer.points){
+        eggbert.roundsWon++;
+        console.log('Eggbert wins the round!');
+      }else if(computer.points > eggbert.points){
+       computer.roundsWon++;
+        console.log('Computer wins the round!');
+      } else(console.log('Tie round'));
+      
+    },
+    
+    round: function(eggbert, computer){
+      while((eggbert.hand.length >0) &&  (computer.hand.length > 0)){
+        this.roundBattle(eggbert, computer)}
+        this.whoWon(eggbert, computer);
+        eggbert.points = 0;
+        computer.points = 0;  
+    },
+    whoWonGame: function(eggbert, computer){
+      if(eggbert.roundsWon > computer.roundsWon){
+        console.log('Eggbert won the game!');
+      }else if(computer.roundsWon > eggbert.roundsWon){
+        console.log('Computer won game!');
+      }else(console.log('Tie game'));
+    },
+    playgame: function() {
+      this.drawCards(this.eggbert, this.computer, this.cardsInHand);
+      this.round(this.eggbert, this.computer);
+    },
+    startGame: function(){
+      while((this.cardsInHand*2) <= this.deck.length){
+        this.playgame(this.eggbert, this.computer);
+      }
+      this.whoWonGame(this.eggbert, this.computer);
+    }  
 }
-const eggRandCollection = () => {
-  for(i = 0; i < 3; i++){
-    const randCard = Math.floor(Math.random() * cardChoices.length);
-    eggDeck.push(cardChoices[randCard]);
-    cardChoices.splice(randCard, 1);
-  }
-  console.log(eggDeck);
-}
-
-compRandCollection();
-eggRandCollection();
-
-const compChoice = () => {
-  for(i = 0; i < 3; i++){
-    if(compDeck[i].damage > eggDeck[i].damage) {
-      //(Scoreboard.points['Computer'] + 1),
-      console.log('computer gets point')
-    }else if (compDeck[i].damage < eggDeck[i].damage){
-      console.log('player gets point');
-    }else{
-      console.log('tie');
-    };
-  }
-}
-
-compChoice();
-computerPoints();
-playerPoints();
-}
-// loop over cards
-
-// check the cards against each other
-// increment points and display message
-// discard cards that were used
-
-
-// const compChoiceIndex = compDeck.damage 
-// cardChoices.damage = cardChoicesdamage;
-// console.log(cardChoicesdamage);
-
-
-
-
-
-
-
-// //playersColllection {
-//     hand:
-//     points:
-//     discarded pile:
-
-
-
-//     make scoreboards object
-// }
+game.startGame();
